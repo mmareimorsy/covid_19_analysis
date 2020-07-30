@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- page title  -->
+    <title>COVID 19 Analysis - UIUC - CS498 - mmorsy2</title>
+    <!-- Bootstrap copied from https://getbootstrap.com/docs/4.4/getting-started/introduction/-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <!-- Custom logo styling -->
+    <link rel="stylesheet" href="css/logo.css">
+    <!-- Custom Tooltip CSS styling-->
+    <link rel="stylesheet" href="css/d3-tip.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container">
+            <a class="navbar-brand" href="index.html" ><img id="logo" src="img/illinois.png"></a>      
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <h4 style="font-weight: bold;" >Introduction</h4>
+            <p>
+                COVID-19 virus first cases were recorded in Asia in the end of 2019 & started spreading globally since then; This page is a representation of some of the the data available about the virus global spread using data recorded starting from 1/22/2020 till our current date.
+            </p>
+            <p>
+                The page is focusing on providing visualizations that can provide easy & useful insights in three main areas. </br>
+            </p>
+        </div>
+        <div class="row">
+            <ul>
+                <li>Global virus spread progress</li>
+                <li>Fatality ratio progress</li>
+                <li>Country specific trends</li>
+            </ul>
+        </div>
+        <div class="row">
+            <p>
+                <small>
+                    Source of the data used here is "COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University". The data repository is available on github <a href="https://github.com/CSSEGISandData/COVID-19">here.</a>
+                </small>
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <h4 style="font-weight: bold;" >Global virus spread progress</h4>
+            <p>The first scene provides a high level view on the spread progress of the COVID-19 virus; The chart is an animation that displays every day the top 10 countries based on the number of the recorded cases.
+            </p>
+            <p>
+            The chart runs over time & keeps updating the total number of cases per country over time; It also focuses on the top country specifically as the chart displays the name & the number of cases in the top country as they update over time.                
+            </p>
+            <p>
+            The chart is also color coded by continent as it can aid the reader to realize that in the first days the spread was mostly focused in Asian countries then a shift happened that North America represented by the US became the top country followed by few European countries then finally the top 10 countries became spread across the different continents.
+            </p>
+            <p>
+            The user can click Start button to view the animation & can stop or reset at any point if needed.
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <button id="play-gantt" class="btn btn-primary">Start</button>
+                <button id="reset-gantt" class="btn btn-primary">Reset</button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="continent-legend">
+            </div>
+        </div>
+        <div class="row">
+            <div id="gantt-area">
+            </div>  
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <h4 style="font-weight: bold;" >Fatality ratio progress</h4>
+            <p>
+                In the below scene we display the fatality ratio per country versus number of confirmed cases since the beginning of the spread of the COVID 19 virus.
+            </p>
+            <p>
+                The data is visualized in the form of a scatter plot where each country is represented in the form of a circle & circles are color coded with different colors that represent the continent where a country belongs to.
+            </p>
+            <p>
+                Radius of the circles are updated over time & they represent the fatality ratio so the user can get an indication based on the size of the circle on the progress of the fatality ratio as it is noted that fatality ratios have been improving over time.
+            </p>
+            <p>
+                Hitting play will go back to the beginning of recording data of the panademic & start showing the progress till our current date; you could pause at anytime by clicking pause & you could reset the animation by clicking reset at anytime.
+
+                More details are provided if you hover over a specific circle of interest to get to know what country is it & stats like fatality ratio, confirmed cases, total deaths & total recovery.
+            </p>
+            <p>
+                Some insights could be dedcuted from the below scatter plot; for example It could be seen that currently Yemen holds the highest fatality ratio; followed by some Western European countries as Belgium, Italy, UK & out of North America Mexico is leading in fatality ratio at the current time.
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <button id="play-button" class="btn btn-primary">Play</button>
+                <button id="reset-button" class="btn btn-primary">Reset</button>
+            </div>
+        </div>
+        <div class="row">
+            <div id="scatter-area"></div>  
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <h4 style="font-weight: bold;" >Country specific trends</h4>
+            <p>
+                This final scene provides a fully interactive way for the user to get insights per country.
+            </p>
+            <p>
+                On selection of one country from the drop down menu, that would display the trends for the selected country over time starting from the date when the panademic has started till our current date.
+                Trends displayed are for the confirmed cases, death cases & recovery cases, each displayed as total accumlative recorded so far till a specific date.
+            </p>
+            <p>
+                These charts could help get an idea of the progress of the spread in specific countries.
+                Countries like China & Germany for example shows almost flat curves for their trends which indicate the virus spread har redacted a lot; while on the other hands US, Brazil & India are still having more spread.
+            </p>
+            <p>
+                Hovering by the mouse over the bars would provide the exact counter of the data against specific date.
+            </p>
+        </div>
+        <div class="row">
+            <div class="row">
+                <div id="continent-legend-bar">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="country-list">Choose a country</label>
+                <select id="country-list" name="country-list">Play</select>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div id="bar-area1"></div>  
+        </div>
+        <div class="row">
+            <div id="bar-area2"></div>  
+        </div>
+        <div class="row">
+            <div id="bar-area3"></div>  
+        </div>
+    </div>
+
+<!-- Bootstarp copied from https://getbootstrap.com/docs/4.4/getting-started/introduction/ -->
+<!-- Optional JavaScript -->
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+<!-- d3 v5 library -->
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<!-- JS For 3 scenes of visualizations-->
+<script src="js/gantt.js"></script>
+<script src="js/scatter.js"></script>
+<script src="js/bar.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
