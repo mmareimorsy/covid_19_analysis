@@ -260,7 +260,7 @@ function scatterPlot(){
                 .attr("x2", x(highestFatalityConfirmed)+(highestFatality/2))
                 .attr("y2", y(highestFatality)-highestFatality)
                 .attr("stroke-width", 3)
-                .attr("marker-end", "url(#arrowhead)")
+                .attr("marker-end", "url(#arrowhead-scatter)")
                 .attr("stroke", continentColor(continentsMap[highestFatalityIndex].continent));
             
             var annotationText = d3.select("#annotation-text-scatter");
