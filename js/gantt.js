@@ -129,7 +129,7 @@ function ganttChart(){
         var dates = confirmed.columns.slice(1,);
 
         // annotation section 
-        var annotate = false;
+        var annotate = true;
                 
 
         // Initial update of Data
@@ -237,9 +237,8 @@ function ganttChart(){
             .attr("height", y.bandwidth())
             .attr("fill", function(d,i){return continentColor(continentsToShow[i]);});
         
-        // trigger annotation once the graph reaches the last step
-        if (annotate == true){
-            svg.append("marker")
+        // trigger annotation update
+        svg.append("marker")
                 .attr("id", "arrowhead")
                 .attr("refX", 6)
                 .attr("refY", 6)
@@ -249,7 +248,11 @@ function ganttChart(){
                 .attr("orient", "auto")
                 .append("path")
                 .attr("d", "M 0 0 12 6 0 12 3 6")
-                .style("fill",continentColor(continentsToShow[0]));
+                .style("fill","");
+                
+        // trigger annotation update    
+        if (annotate == true){
+            svg.select("#arrowhead").transition().style("fill",continentColor(continentsToShow[0]));
 
             var line = d3.select("#annotation-line");
 

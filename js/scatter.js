@@ -44,6 +44,20 @@ function scatterPlot(){
         .attr("opacity", "0.4")
         .attr("text-anchor", "middle");
     
+    // line for annotation when it is triggered 
+    svg.append("line")
+        .attr("id", "annotation-line-scatter")
+        .attr("x1",0)
+        .attr("x2",0)
+        .attr("y1",0)
+        .attr("y2",0);
+    
+    // text for annotation when triggered
+    svg.append("text")
+        .attr("id", "annotation-text-scatter")
+        .attr("x",0)
+        .attr("y",0);
+
     // X Axis 
     var x = d3.scaleLog()
         .clamp(true)
@@ -108,8 +122,9 @@ function scatterPlot(){
         var dates = confirmed.columns.slice(1,);
         var dateIndex = dates.length-1;
         var dateInput = dates[dateIndex];
-        
-        update(confirmed, deaths, recovered,continentsMap, dateInput);
+
+        var annotate = true;
+        update(confirmed, deaths, recovered,continentsMap, dateInput, annotate);
 
         var interval;
         dateIndex = 0;
@@ -118,16 +133,21 @@ function scatterPlot(){
                 if (button.text() == "Play"){
                     button.text("Pause");
                     interval = d3.interval(function(){
-                        if (dateIndex < dates.length - 1){
-                            dateIndex = dateIndex + 1;
+                        if (dateIndex == dates.length - 1){
                             dateInput = dates[dateIndex];
-                            update(confirmed, deaths, recovered, continentsMap, dateInput);
-                        }
-                        else{
-                            button.text("Play");
+                            annotate = true;
+                            update(confirmed, deaths, recovered, continentsMap, dateInput, annotate);
+                            button.text("play");
                             dateIndex = 0;
                             interval.stop();
                         }
+                        else if (dateIndex < dates.length){
+                            dateInput = dates[dateIndex];
+                            annotate = false;
+                            update(confirmed, deaths, recovered, continentsMap, dateInput, annotate);
+                            dateIndex = dateIndex + 1;
+                        }
+                        
                     }, transitionPer);            
                 }
                 else {
@@ -139,7 +159,8 @@ function scatterPlot(){
         d3.select("#reset-button").on("click", function(){
             dateIndex = 0;
             dateInput = dates[dateIndex];
-            update(confirmed, deaths, recovered, continentsMap, dateInput);
+            annotate = false;
+            update(confirmed, deaths, recovered, continentsMap, dateInput, annotate);
 
         });
         
@@ -149,7 +170,7 @@ function scatterPlot(){
     });
     
     // helper function to update data
-    function update(confirmed, deaths, recovered, continentsMap, dateInput){
+    function update(confirmed, deaths, recovered, continentsMap, dateInput, annotate){
         var fConfirmed = Array.from(confirmed, function(d){return +d[dateInput];});
         var fDeaths = Array.from(deaths, function(d){return +d[dateInput];});
         var fRecovered = Array.from(recovered, function(d){return +d[dateInput];});
@@ -159,7 +180,7 @@ function scatterPlot(){
                 return 0;
             }
             else{
-                return (100 * fDeaths[i]/fConfirmed[i]);
+                return (100 * (+fDeaths[i])/(+fConfirmed[i]));
             }
         });
 
@@ -168,7 +189,7 @@ function scatterPlot(){
                 return 0;
             }
             else{
-                return (100 * fRecovered[i]/fConfirmed[i]);
+                return (100 * (+fRecovered[i])/(+fConfirmed[i]));
             }
         });
         
@@ -211,6 +232,63 @@ function scatterPlot(){
             .attr("cx", function(d,i){return x(fConfirmed[i]);})
             .attr("cy",function(d,i){return y(fatality_ratio[i]); })
             .attr("r",function(d,i){return fatality_ratio[i];});
+        
+        // trigger annotation once the graph reaches the last step
+        if (annotate == true){
+            var highestFatality = d3.max(fatality_ratio, function(d){return d;});
+            var highestFatalityIndex = fatality_ratio.findIndex(function(d){return d == highestFatality});
+            var highestFatalityCountry = confirmed[highestFatalityIndex].country;
+            var highestFatalityConfirmed = confirmed[highestFatalityIndex][dateInput];
+            
+            svg.append("marker")
+                .attr("id", "arrowhead-scatter")
+                .attr("refX", 6)
+                .attr("refY", 6)
+                .attr("markerWidth", 30)
+                .attr("markerHeight", 30)
+                .attr("markerUnits", "userSpaceOnUse")
+                .attr("orient", "auto")
+                .append("path")
+                .attr("d", "M 0 0 12 6 0 12 3 6")
+                .style("fill",continentColor(continentsMap[highestFatalityIndex].continent));
+
+            var line = d3.select("#annotation-line-scatter");
+
+            line.transition()
+                .attr("x1", x(highestFatalityConfirmed)+50)
+                .attr("y1", y(highestFatality)-100)
+                .attr("x2", x(highestFatalityConfirmed)+(highestFatality/2))
+                .attr("y2", y(highestFatality)-highestFatality)
+                .attr("stroke-width", 3)
+                .attr("marker-end", "url(#arrowhead)")
+                .attr("stroke", continentColor(continentsMap[highestFatalityIndex].continent));
+            
+            var annotationText = d3.select("#annotation-text-scatter");
+            annotationText.attr("class", "annotation-scatter")
+                .transition()
+                .attr("x",x(highestFatalityConfirmed)+50)
+                .attr("y",y(highestFatality)-100)
+                .attr("font-family","sans-serif")
+                .attr("font-size",15)
+                .style("fill",continentColor(continentsMap[highestFatalityIndex].continent))
+                .style("text-decoration","underline")
+                .attr("text-anchor", "start")
+            
+            var annotation = d3.select(".annotation-scatter")
+                .html("Top fatality ratio is in " + highestFatalityCountry + " at " + d3.format(",.2f")(+highestFatality) + "%");
+        }
+        else{
+            d3.select("#annotation-text-scatter")
+                .attr("x",0)
+                .attr("y",0)
+                .html("");
+            d3.select("#annotation-line-scatter")
+                .attr("x1",0)
+                .attr("x2",0)
+                .attr("y1",0)
+                .attr("y2",0)
+                .attr("marker-end","");
+        }
     };
 }
 
