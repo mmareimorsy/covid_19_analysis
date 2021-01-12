@@ -61,12 +61,12 @@ function scatterPlot(){
     // X Axis 
     var x = d3.scaleLog()
         .clamp(true)
-        .domain([1,10000000])
+        .domain([1,100000000])
         .range([0,width]);
     
     svg.append("g")
         .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickValues([1,10,100,1000,10000,100000,1000000,10000000]).tickFormat(d3.format(".2s")));
+        .call(d3.axisBottom(x).tickValues([1,10,100,1000,10000,100000,1000000,10000000,100000000]).tickFormat(d3.format(".2s")));
     
     // Y Axis 
     var y = d3.scaleLinear()
