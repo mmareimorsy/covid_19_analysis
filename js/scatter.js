@@ -231,7 +231,7 @@ function scatterPlot(){
             .transition(t)
             .attr("cx", function(d,i){return x(fConfirmed[i]);})
             .attr("cy",function(d,i){return y(fatality_ratio[i]); })
-            .attr("r",function(d,i){return fatality_ratio[i];});
+            .attr("r",function(d,i){return 1.25*fatality_ratio[i];});
         
         // trigger annotation once the graph reaches the last step
         if (annotate == true){
